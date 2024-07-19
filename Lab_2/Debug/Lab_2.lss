@@ -72,12 +72,12 @@ Disassembly of section .text:
   7c:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 00000080 <setup>:
-
-#define LED_PIN PB5  // El pin PB5 corresponde al pin digital 13 en el Arduino Nano
+#define LED_PIN PB5
+#define DELAY_TIME 1000 // 1000 ms = 1 segundo
 
 void setup() {
-	// Configurar el pin del LED como salida
-	DDRB |= (1 << LED_PIN);
+    // Configura el pin LED_PIN como salida
+    DDRB |= (1 << LED_PIN);
   80:	84 b1       	in	r24, 0x04	; 4
   82:	80 62       	ori	r24, 0x20	; 32
   84:	84 b9       	out	0x04, r24	; 4
@@ -87,8 +87,8 @@ void setup() {
 }
 
 void loop() {
-	// Encender el LED
-	PORTB |= (1 << LED_PIN);
+    // Enciende el LED
+    PORTB |= (1 << LED_PIN);
   88:	85 b1       	in	r24, 0x05	; 5
   8a:	80 62       	ori	r24, 0x20	; 32
   8c:	85 b9       	out	0x05, r24	; 5
@@ -99,23 +99,24 @@ void loop() {
 
 	__builtin_avr_delay_cycles(__ticks_dc);
   8e:	2f ef       	ldi	r18, 0xFF	; 255
-  90:	89 e6       	ldi	r24, 0x69	; 105
-  92:	98 e1       	ldi	r25, 0x18	; 24
+  90:	83 ed       	ldi	r24, 0xD3	; 211
+  92:	90 e3       	ldi	r25, 0x30	; 48
   94:	21 50       	subi	r18, 0x01	; 1
   96:	80 40       	sbci	r24, 0x00	; 0
   98:	90 40       	sbci	r25, 0x00	; 0
   9a:	e1 f7       	brne	.-8      	; 0x94 <loop+0xc>
   9c:	00 c0       	rjmp	.+0      	; 0x9e <loop+0x16>
   9e:	00 00       	nop
-	_delay_ms(500);
-	// Apagar el LED
-	PORTB &= ~(1 << LED_PIN);
+    _delay_ms(DELAY_TIME);
+    
+    // Apaga el LED
+    PORTB &= ~(1 << LED_PIN);
   a0:	85 b1       	in	r24, 0x05	; 5
   a2:	8f 7d       	andi	r24, 0xDF	; 223
   a4:	85 b9       	out	0x05, r24	; 5
   a6:	2f ef       	ldi	r18, 0xFF	; 255
-  a8:	89 e6       	ldi	r24, 0x69	; 105
-  aa:	98 e1       	ldi	r25, 0x18	; 24
+  a8:	83 ed       	ldi	r24, 0xD3	; 211
+  aa:	90 e3       	ldi	r25, 0x30	; 48
   ac:	21 50       	subi	r18, 0x01	; 1
   ae:	80 40       	sbci	r24, 0x00	; 0
   b0:	90 40       	sbci	r25, 0x00	; 0
@@ -125,14 +126,14 @@ void loop() {
   b8:	08 95       	ret
 
 000000ba <main>:
-	_delay_ms(500);
+    _delay_ms(DELAY_TIME);
 }
 
 int main(void) {
-	setup();
+    setup();
   ba:	0e 94 40 00 	call	0x80	; 0x80 <setup>
-	while (1) {
-		loop();
+    while (1) {
+        loop();
   be:	0e 94 44 00 	call	0x88	; 0x88 <loop>
   c2:	fd cf       	rjmp	.-6      	; 0xbe <main+0x4>
 
