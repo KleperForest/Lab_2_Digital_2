@@ -1,4 +1,4 @@
-
+// Ejemplo de led parpadeante PB5 Arduino Nano atmega 328p
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
