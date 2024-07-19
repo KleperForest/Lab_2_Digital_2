@@ -13,12 +13,15 @@
 #define F_CPU 16000000UL
 
 #include <avr/io.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <util/delay.h>
 #include "LCD_4_8/LCD.h"
 
 ////////////////////////////////////////////////////
 // Variables.
 ////////////////////////////////////////////////////
+
 
 ////////////////////////////////////////////////////
 //Rutinas
@@ -30,7 +33,7 @@
 
 
 int main(void) {
-	
+
 	
 	
 	while (1) {
