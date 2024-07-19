@@ -14,6 +14,7 @@
 
 #include <avr/io.h>
 #include <util/delay.h>
+#include "LCD_4_8/LCD.h"
 
 ////////////////////////////////////////////////////
 // Variables.
