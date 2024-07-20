@@ -10,9 +10,9 @@
 ////////////////////////////////////////////////////
 // Definimos Pines
 ////////////////////////////////////////////////////
-//Data
-#define D0 PB1 
-#define D1 PB3
+/*//Data
+#define D0 PB3
+#define D1 PB2
 // Estos no son del puerto D para poder utilizar Rx y Tx
 #define D2 PD2
 #define D3 PD3
@@ -21,10 +21,10 @@
 #define D6 PD6
 #define D7 PD7
 //RS
-#define RS PB0
+#define RS PB1
 //E 
-#define Enable PB1
-// R/W va a tierra.
+#define Enable PB0
+// R/W va a tierra.*/
 
 ////////////////////////////////////////////////////
 // 4bits
