@@ -3,31 +3,31 @@ Lab_2.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000032  00800100  00000b04  00000b98  2**0
+  0 .data         00000030  00800100  00000b04  00000b98  2**0
                   CONTENTS, ALLOC, LOAD, DATA
   1 .text         00000b04  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000016  00800132  00800132  00000bca  2**0
+  2 .bss          00000016  00800130  00800130  00000bc8  2**0
                   ALLOC
-  3 .comment      0000005c  00000000  00000000  00000bca  2**0
+  3 .comment      0000005c  00000000  00000000  00000bc8  2**0
                   CONTENTS, READONLY
-  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000c28  2**2
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000c24  2**2
                   CONTENTS, READONLY
-  5 .debug_aranges 00000130  00000000  00000000  00000c68  2**0
+  5 .debug_aranges 00000130  00000000  00000000  00000c64  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   0000172b  00000000  00000000  00000d98  2**0
+  6 .debug_info   0000172b  00000000  00000000  00000d94  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000a13  00000000  00000000  000024c3  2**0
+  7 .debug_abbrev 00000a13  00000000  00000000  000024bf  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000b64  00000000  00000000  00002ed6  2**0
+  8 .debug_line   00000b64  00000000  00000000  00002ed2  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  0000025c  00000000  00000000  00003a3c  2**2
+  9 .debug_frame  0000025c  00000000  00000000  00003a38  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000005db  00000000  00000000  00003c98  2**0
+ 10 .debug_str    000005db  00000000  00000000  00003c94  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00000c92  00000000  00000000  00004273  2**0
+ 11 .debug_loc    00000c92  00000000  00000000  0000426f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 000000f0  00000000  00000000  00004f05  2**0
+ 12 .debug_ranges 000000f0  00000000  00000000  00004f01  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -77,13 +77,13 @@ Disassembly of section .text:
   7e:	02 c0       	rjmp	.+4      	; 0x84 <__do_copy_data+0x10>
   80:	05 90       	lpm	r0, Z+
   82:	0d 92       	st	X+, r0
-  84:	a2 33       	cpi	r26, 0x32	; 50
+  84:	a0 33       	cpi	r26, 0x30	; 48
   86:	b1 07       	cpc	r27, r17
   88:	d9 f7       	brne	.-10     	; 0x80 <__do_copy_data+0xc>
 
 0000008a <__do_clear_bss>:
   8a:	21 e0       	ldi	r18, 0x01	; 1
-  8c:	a2 e3       	ldi	r26, 0x32	; 50
+  8c:	a0 e3       	ldi	r26, 0x30	; 48
   8e:	b1 e0       	ldi	r27, 0x01	; 1
   90:	01 c0       	rjmp	.+2      	; 0x94 <.do_clear_bss_start>
 
@@ -91,7 +91,7 @@ Disassembly of section .text:
   92:	1d 92       	st	X+, r1
 
 00000094 <.do_clear_bss_start>:
-  94:	a8 34       	cpi	r26, 0x48	; 72
+  94:	a6 34       	cpi	r26, 0x46	; 70
   96:	b2 07       	cpc	r27, r18
   98:	e1 f7       	brne	.-8      	; 0x92 <.do_clear_bss_loop>
   9a:	0e 94 6d 01 	call	0x2da	; 0x2da <main>
@@ -563,7 +563,7 @@ int main(void)
  31e:	60 e0       	ldi	r22, 0x00	; 0
  320:	81 e0       	ldi	r24, 0x01	; 1
  322:	0e 94 3a 01 	call	0x274	; 0x274 <Lcd_Set_Cursor_8>
-	Lcd_Write_String_8("S1:  S2:  S3:");
+	Lcd_Write_String_8("S:  S2:  S3:");
  326:	80 e0       	ldi	r24, 0x00	; 0
  328:	91 e0       	ldi	r25, 0x01	; 1
  32a:	0e 94 60 01 	call	0x2c0	; 0x2c0 <Lcd_Write_String_8>
@@ -573,7 +573,7 @@ int main(void)
 		// Leer los valores de los ADC
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
  32e:	42 e0       	ldi	r20, 0x02	; 2
- 330:	64 e4       	ldi	r22, 0x44	; 68
+ 330:	62 e4       	ldi	r22, 0x42	; 66
  332:	71 e0       	ldi	r23, 0x01	; 1
  334:	ce 01       	movw	r24, r28
  336:	01 96       	adiw	r24, 0x01	; 1
@@ -586,7 +586,7 @@ int main(void)
  340:	0e 94 3a 01 	call	0x274	; 0x274 <Lcd_Set_Cursor_8>
 		snprintf(buffer, sizeof(buffer), "%4u", adc_results[1]);
  344:	0f 2e       	mov	r0, r31
- 346:	f4 e4       	ldi	r31, 0x44	; 68
+ 346:	f2 e4       	ldi	r31, 0x42	; 66
  348:	ef 2e       	mov	r14, r31
  34a:	f1 e0       	ldi	r31, 0x01	; 1
  34c:	ff 2e       	mov	r15, r31
@@ -597,7 +597,7 @@ int main(void)
  356:	82 81       	ldd	r24, Z+2	; 0x02
  358:	8f 93       	push	r24
  35a:	0f 2e       	mov	r0, r31
- 35c:	fe e0       	ldi	r31, 0x0E	; 14
+ 35c:	fd e0       	ldi	r31, 0x0D	; 13
  35e:	af 2e       	mov	r10, r31
  360:	f1 e0       	ldi	r31, 0x01	; 1
  362:	bf 2e       	mov	r11, r31
@@ -609,7 +609,7 @@ int main(void)
  36e:	dd 24       	eor	r13, r13
  370:	d4 f8       	bld	r13, 4
  372:	df 92       	push	r13
- 374:	04 e3       	ldi	r16, 0x34	; 52
+ 374:	02 e3       	ldi	r16, 0x32	; 50
  376:	11 e0       	ldi	r17, 0x01	; 1
  378:	1f 93       	push	r17
  37a:	0f 93       	push	r16
@@ -644,11 +644,11 @@ int main(void)
  3b0:	82 e0       	ldi	r24, 0x02	; 2
  3b2:	0e 94 3a 01 	call	0x274	; 0x274 <Lcd_Set_Cursor_8>
 		snprintf(buffer, sizeof(buffer), "%4d", counter);
- 3b6:	80 91 33 01 	lds	r24, 0x0133	; 0x800133 <__data_end+0x1>
+ 3b6:	80 91 31 01 	lds	r24, 0x0131	; 0x800131 <__data_end+0x1>
  3ba:	8f 93       	push	r24
- 3bc:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <__data_end>
+ 3bc:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <__data_end>
  3c0:	8f 93       	push	r24
- 3c2:	82 e1       	ldi	r24, 0x12	; 18
+ 3c2:	81 e1       	ldi	r24, 0x11	; 17
  3c4:	91 e0       	ldi	r25, 0x01	; 1
  3c6:	9f 93       	push	r25
  3c8:	8f 93       	push	r24
@@ -663,9 +663,9 @@ int main(void)
 
 		// Enviar los valores de los ADC y el contador a través de UART
 		snprintf(buffer, sizeof(buffer), "ADC6:%u,ADC7:%u,Count:%d\r\n", adc_results[1], adc_results[0], counter);
- 3dc:	80 91 33 01 	lds	r24, 0x0133	; 0x800133 <__data_end+0x1>
+ 3dc:	80 91 31 01 	lds	r24, 0x0131	; 0x800131 <__data_end+0x1>
  3e0:	8f 93       	push	r24
- 3e2:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <__data_end>
+ 3e2:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <__data_end>
  3e6:	8f 93       	push	r24
  3e8:	f7 01       	movw	r30, r14
  3ea:	81 81       	ldd	r24, Z+1	; 0x01
@@ -676,7 +676,7 @@ int main(void)
  3f4:	8f 93       	push	r24
  3f6:	82 81       	ldd	r24, Z+2	; 0x02
  3f8:	8f 93       	push	r24
- 3fa:	86 e1       	ldi	r24, 0x16	; 22
+ 3fa:	85 e1       	ldi	r24, 0x15	; 21
  3fc:	91 e0       	ldi	r25, 0x01	; 1
  3fe:	9f 93       	push	r25
  400:	8f 93       	push	r24
@@ -705,21 +705,21 @@ int main(void)
  42a:	8b 32       	cpi	r24, 0x2B	; 43
  42c:	51 f4       	brne	.+20     	; 0x442 <__EEPROM_REGION_LENGTH__+0x42>
 				counter++;  // Incrementar el contador
- 42e:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <__data_end>
- 432:	90 91 33 01 	lds	r25, 0x0133	; 0x800133 <__data_end+0x1>
+ 42e:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <__data_end>
+ 432:	90 91 31 01 	lds	r25, 0x0131	; 0x800131 <__data_end+0x1>
  436:	01 96       	adiw	r24, 0x01	; 1
- 438:	90 93 33 01 	sts	0x0133, r25	; 0x800133 <__data_end+0x1>
- 43c:	80 93 32 01 	sts	0x0132, r24	; 0x800132 <__data_end>
+ 438:	90 93 31 01 	sts	0x0131, r25	; 0x800131 <__data_end+0x1>
+ 43c:	80 93 30 01 	sts	0x0130, r24	; 0x800130 <__data_end>
  440:	0b c0       	rjmp	.+22     	; 0x458 <__EEPROM_REGION_LENGTH__+0x58>
 				} else if (received_char == '-') {
  442:	8d 32       	cpi	r24, 0x2D	; 45
  444:	49 f4       	brne	.+18     	; 0x458 <__EEPROM_REGION_LENGTH__+0x58>
 				counter--;  // Decrementar el contador
- 446:	80 91 32 01 	lds	r24, 0x0132	; 0x800132 <__data_end>
- 44a:	90 91 33 01 	lds	r25, 0x0133	; 0x800133 <__data_end+0x1>
+ 446:	80 91 30 01 	lds	r24, 0x0130	; 0x800130 <__data_end>
+ 44a:	90 91 31 01 	lds	r25, 0x0131	; 0x800131 <__data_end+0x1>
  44e:	01 97       	sbiw	r24, 0x01	; 1
- 450:	90 93 33 01 	sts	0x0133, r25	; 0x800133 <__data_end+0x1>
- 454:	80 93 32 01 	sts	0x0132, r24	; 0x800132 <__data_end>
+ 450:	90 93 31 01 	sts	0x0131, r25	; 0x800131 <__data_end+0x1>
+ 454:	80 93 30 01 	sts	0x0130, r24	; 0x800130 <__data_end>
  458:	9f ef       	ldi	r25, 0xFF	; 255
  45a:	e9 e6       	ldi	r30, 0x69	; 105
  45c:	f8 e1       	ldi	r31, 0x18	; 24

@@ -48,7 +48,7 @@ int main(void)
 	Lcd_Clear_8();  // Limpiar el LCD
 	_delay_ms(100);  // Esperar para asegurar que el LCD esté listo
 	Lcd_Set_Cursor_8(1, 0);
-	Lcd_Write_String_8("S1:  S2:  S3:");
+	Lcd_Write_String_8("S:  S2:  S3:");
 
 	while (1)
 	{
