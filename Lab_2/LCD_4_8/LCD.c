@@ -33,20 +33,22 @@ void Lcd_Cmd_8(char a)
 
 void Lcd_InitLCD8bits()
 {
-	PORTB &= ~(1<<PORTB1);  // RS = 0
-	PORTB &= ~(1<<PORTB0);  // Enable = 0
-	_delay_ms(20);          // Esperar más tiempo para asegurar que el LCD esté listo
-	Lcd_Cmd_8(0x30);
+	PORTB &= ~(1<<PORTB1);   //RS = 0, se le indica que es modo comando
+	PORTB &= ~(1<<PORTB0);   //E = 0
+	_delay_ms(20);     //Pequeños delay que indica el fabricante del LCD
+	 Lcd_Cmd_8(0x30);     //Comando que se repite 3 veces, que indica el fabricante de la LCD
 	_delay_ms(5);
-	Lcd_Cmd_8(0x30);
-	_delay_ms(1);
-	Lcd_Cmd_8(0x30);
+	 Lcd_Cmd_8(0x30);
+	_delay_ms(5);
+	 Lcd_Cmd_8(0x30);
 	_delay_ms(10);
-	Lcd_Cmd_8(0x38);          // Función de 8 bits, 2 líneas, 5x7 dots
-	Lcd_Cmd_8(0x0C);          // Display ON, Cursor OFF
-	Lcd_Cmd_8(0x01);          // Limpiar Display
-	_delay_ms(2);
-	Lcd_Cmd_8(0x06);          // Incrementar cursor
+
+	 Lcd_Cmd_8(0x38);  //Comando que indica el fabricante del LCD, usando la matriz de 5X8
+	 Lcd_Cmd_8(0x0C);  //Comando que indica el fabricante del LCD, display encendido
+	 Lcd_Cmd_8(0x01);  //Comando que indica el fabricante del LCD, Limpiar LCD
+	 Lcd_Cmd_8(0x06);  //Comando que indica el fabricante del LCD, comenzar a almacenar en DDRAM
+	
+	
 }
 
 void Lcd_Clear_8()
