@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <util/delay.h>
 
-
 ////////////////////////////////////////////////////
 // 4Bits.
 ////////////////////////////////////////////////////
@@ -30,7 +29,7 @@ void LCD_Comand(){
 	PORTD |=  (1 << PORTD5) | (1 << PORTD4);
 	PORTD &= ~((1 << PORTD7) | (1 << PORTD6) | (1 << PORTD3) | (1 << PORTD2));
 	//Pines  RS and Enable
-	PORTB &= ~(1 << PORTB0);// Desactivar SR
-	PORTB |= (1 << PORTB1);// Activar Enable
+	PORTB &= ~(1 << PORTB1);// Desactivar SR
+	PORTB |= (1 << PORTB0);// Activar Enable
 }
 
