@@ -50,7 +50,7 @@ int main(void)
 
 	while (1)
 	{
-		// Leer los valores de los ADC
+		/*// Leer los valores de los ADC
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
 
 		// Mostrar los valores en el LCD
@@ -80,6 +80,6 @@ int main(void)
 			}
 		}
 		
-		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización
+		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización*/
 	}
 }
