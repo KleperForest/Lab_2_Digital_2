@@ -1,127 +1,97 @@
-#define F_CPU 16000000UL  // Define la frecuencia del reloj del microcontrolador
-
 #include "LCD.h"
-
 #include <avr/io.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
 
 ////////////////////////////////////////////////////
-// Inicialización en modo 4 bits (vacío)
-////////////////////////////////////////////////////
-void initLCD4bits(){}
-
-////////////////////////////////////////////////////
-// Inicialización en modo 8 bits
+// 8Bits.
 ////////////////////////////////////////////////////
 void Lcd_Port(char a)
 {
-	if(a & 1)               //0000 0001
-	PORTB |= (1<<PORTB3);
-	else
-	PORTB &= ~(1<<PORTB3);
-	
-	if(a & 2)               //0000 0010
-	PORTB |= (1<<PORTB2);
-	else
-	PORTB &= ~(1<<PORTB2);
-	
-	if(a & 4)               //0000 0100
-	PORTD |= (1<<PORTD2);
-	else
-	PORTD &= ~(1<<PORTD2);
-	
-	if(a & 8)               //0000 1000
-	PORTD |= (1<<PORTD3);
-	else
-	PORTD &= ~(1<<PORTD3);
-	
-	if(a & 16)              //0001 0000
-	PORTD |= (1<<PORTD4);
-	else
-	PORTD &= ~(1<<PORTD4);
-
-	if(a & 32)              //0010 0000
-	PORTD |= (1<<PORTD5);
-	else
-	PORTD &= ~(1<<PORTD5);
-	
-	if(a & 64)              //0100 0000
-	PORTD |= (1<<PORTD6);
-	else
-	PORTD &= ~(1<<PORTD6);
-	
-	if(a & 128)             //1000 0000
-	PORTD |= (1<<PORTD7);
-	else
-	PORTD &= ~(1<<PORTD7);
+	if(a & 1) PORTB |= (1<<PORTB3); else PORTB &= ~(1<<PORTB3);
+	if(a & 2) PORTB |= (1<<PORTB2); else PORTB &= ~(1<<PORTB2);
+	if(a & 4) PORTD |= (1<<PORTD2); else PORTD &= ~(1<<PORTD2);
+	if(a & 8) PORTD |= (1<<PORTD3); else PORTD &= ~(1<<PORTD3);
+	if(a & 16) PORTD |= (1<<PORTD4); else PORTD &= ~(1<<PORTD4);
+	if(a & 32) PORTD |= (1<<PORTD5); else PORTD &= ~(1<<PORTD5);
+	if(a & 64) PORTD |= (1<<PORTD6); else PORTD &= ~(1<<PORTD6);
+	if(a & 128) PORTD |= (1<<PORTD7); else PORTD &= ~(1<<PORTD7);
 }
 
 void Lcd_Cmd(char a)
 {
-	PORTB &= ~(1<<PORTB1);  // RS = 0 (comando)
-	Lcd_Port(a);            // Enviar datos al puerto
-	PORTB |= (1<<PORTB0);   // E = 1
-	_delay_ms(1);
-	PORTB &= ~(1<<PORTB0);  // E = 0
-	_delay_ms(1);
+	PORTB &= ~(1<<PORTB1);  // RS = 0
+	Lcd_Port(a);
+	PORTB |= (1<<PORTB0);   // Enable = 1
+	_delay_ms(2);           // Ajustar el retardo si es necesario
+	PORTB &= ~(1<<PORTB0);  // Enable = 0
+	_delay_ms(2);
 }
 
 void Lcd_InitLCD8bits()
 {
 	PORTB &= ~(1<<PORTB1);  // RS = 0
-	PORTB &= ~(1<<PORTB0);  // E = 0
-	_delay_ms(20);
+	PORTB &= ~(1<<PORTB0);  // Enable = 0
+	_delay_ms(20);          // Esperar más tiempo para asegurar que el LCD esté listo
 	Lcd_Cmd(0x30);
 	_delay_ms(5);
 	Lcd_Cmd(0x30);
 	_delay_ms(1);
 	Lcd_Cmd(0x30);
 	_delay_ms(10);
-
-	Lcd_Cmd(0x38);          // Configuración de 8 bits y 2 líneas
-	Lcd_Cmd(0x0C);          // Encender display sin cursor
-	Lcd_Cmd(0x01);          // Limpiar display
-	Lcd_Cmd(0x06);          // Modo de incremento
+	Lcd_Cmd(0x38);          // Función de 8 bits, 2 líneas, 5x7 dots
+	Lcd_Cmd(0x0C);          // Display ON, Cursor OFF
+	Lcd_Cmd(0x01);          // Limpiar Display
+	_delay_ms(2);
+	Lcd_Cmd(0x06);          // Incrementar cursor
 }
 
 void Lcd_Clear()
 {
-	Lcd_Cmd(1);  // Comando para limpiar el display
+	Lcd_Cmd(0x01);  // Comando para limpiar el LCD
+	_delay_ms(2);   // Esperar para asegurar que el LCD procese el comando
 }
 
 void Lcd_Set_Cursor(char a, char b)
 {
+	char temp;
 	if(a == 1)
-	Lcd_Cmd(0x80 + b);  // Posicionar cursor en la fila 1
+	{
+		temp = 0x80 + b;
+		Lcd_Cmd(temp);
+	}
 	else if(a == 2)
-	Lcd_Cmd(0xC0 + b);  // Posicionar cursor en la fila 2
+	{
+		temp = 0xC0 + b;
+		Lcd_Cmd(temp);
+	}
 }
 
 void Lcd_Write_Char(char a)
 {
-	PORTB |= (1<<PORTB1);   // RS = 1 (dato)
-	Lcd_Port(a);            // Transferir datos
-	PORTB |= (1<<PORTB0);   // E = 1
-	_delay_ms(1);
-	PORTB &= ~(1<<PORTB0);  // E = 0
-	_delay_ms(1);
+	PORTB |= (1<<PORTB1);   // RS = 1
+	Lcd_Port(a);            // Enviar datos
+	PORTB |= (1<<PORTB0);   // Enable = 1
+	_delay_ms(2);
+	PORTB &= ~(1<<PORTB0);  // Enable = 0
+	_delay_ms(2);
 }
 
 void Lcd_Write_String(char *a)
 {
-	int i;
-	for(i=0; a[i] != '\0'; i++)
-	Lcd_Write_Char(a[i]);  // Escribir cada caracter de la cadena
+	while(*a)
+	{
+		Lcd_Write_Char(*a++);
+	}
 }
 
 void Lcd_Shift_Right()
 {
-	Lcd_Cmd(0x1C);  // Comando para desplazar a la derecha
+	Lcd_Cmd(0x1C);
 }
 
 void Lcd_Shift_Left()
 {
-	Lcd_Cmd(0x18);  // Comando para desplazar a la izquierda
+	Lcd_Cmd(0x18);
 }

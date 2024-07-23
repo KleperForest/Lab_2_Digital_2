@@ -45,31 +45,33 @@ int main(void)
 	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
 
 	// Configuración inicial del LCD
+	Lcd_Clear();  // Limpiar el LCD
+	_delay_ms(100);  // Esperar para asegurar que el LCD esté listo
 	Lcd_Set_Cursor(1, 0);
-	Lcd_Write_String("S1:   S2:   S3:");
+	Lcd_Write_String("S1:    S2:    S3:");
 
 	while (1)
 	{
-		/*// Leer los valores de los ADC
+		// Leer los valores de los ADC
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
 
 		// Mostrar los valores en el LCD
 		Lcd_Set_Cursor(2, 0);
-		snprintf(buffer, sizeof(buffer), "%4uV", adc_results[1]);
-		Lcd_Write_String(buffer);
-		
-		snprintf(buffer, sizeof(buffer), "%4uV", adc_results[0]);
-		Lcd_Set_Cursor(2, 6);
+		snprintf(buffer, sizeof(buffer), "%4u", adc_results[1]);
 		Lcd_Write_String(buffer);
 
-		snprintf(buffer, sizeof(buffer), "%4d", counter);
-		Lcd_Set_Cursor(2, 11);
+		Lcd_Set_Cursor(2, 8);
+		snprintf(buffer, sizeof(buffer), "%4u", adc_results[0]);
 		Lcd_Write_String(buffer);
-		
+
+		Lcd_Set_Cursor(2, 12);
+		snprintf(buffer, sizeof(buffer), "%4d", counter);
+		Lcd_Write_String(buffer);
+
 		// Enviar los valores de los ADC y el contador a través de UART
 		snprintf(buffer, sizeof(buffer), "ADC6:%u,ADC7:%u,Count:%d\r\n", adc_results[1], adc_results[0], counter);
 		UART_TransmitString(buffer);
-		
+
 		// Leer y procesar los comandos de la UART
 		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
 			unsigned char received_char = UART_Receive();
@@ -79,7 +81,7 @@ int main(void)
 				counter--;  // Decrementar el contador
 			}
 		}
-		
-		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización*/
+
+		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización
 	}
 }
