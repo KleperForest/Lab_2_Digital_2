@@ -32,19 +32,27 @@ Estos pines son los que se usan para la conexión del LCD
 ////////////////////////////////////////////////////
 // Prototipos de funciones para modo 4 bits
 ////////////////////////////////////////////////////
+void Lcd_Port_4(char a);
+void Lcd_Cmd_4(char a);
 void Lcd_InitLCD4bits();
+void Lcd_Clear_4();
+void Lcd_Set_Cursor_4(char a, char b);
+void Lcd_Write_Char_4(char a);
+void Lcd_Write_String_4(char *a);
+void Lcd_Shift_Right_4();
+void Lcd_Shift_Left_4();
 
 ////////////////////////////////////////////////////
 // Prototipos de funciones para modo 8 bits
 ////////////////////////////////////////////////////
-void Lcd_Port(char a);
-void Lcd_Cmd(char a);
+void Lcd_Port_8(char a);
+void Lcd_Cmd_8(char a);
 void Lcd_InitLCD8bits();
-void Lcd_Clear();
-void Lcd_Set_Cursor(char a, char b);
-void Lcd_Write_Char(char a);
-void Lcd_Write_String(char *a);
-void Lcd_Shift_Right();
-void Lcd_Shift_Left();
+void Lcd_Clear_8();
+void Lcd_Set_Cursor_8(char a, char b);
+void Lcd_Write_Char_8(char a);
+void Lcd_Write_String_8(char *a);
+void Lcd_Shift_Right_8();
+void Lcd_Shift_Left_8();
 
 #endif /* LCD_H_ */
