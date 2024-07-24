@@ -29,6 +29,8 @@ char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en el LCD y
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 int counter = 0;  // Contador inicial
 
+int voltage1, voltage2; //Mapeo de ADC
+
 ////////////////////////////////////////////////////
 // Prototipos de funciones
 ////////////////////////////////////////////////////
@@ -43,18 +45,18 @@ int main(void)
 {
 	// Configuración de puertos y periféricos
 	DDRD = 0xFF;  // Configura todos los pines del puerto D como salidas
-	DDRB = 0x03;  // Configura los primeros dos pines del puerto B como salidas
-	Lcd_InitLCD4bits();  // Inicializa el LCD en modo de 4 bits
+	DDRB = 0x0F;  // Configura los primeros dos pines del puerto B como salidas
+	Lcd_InitLCD8bits();  // Inicializa el LCD en modo de 4 bits
 	ADC_Init();  // Inicializa el ADC
 	UART_Init(BAUD);  // Inicializa la UART
 
 	uint8_t adc_channels[] = {7, 6};  // Canales ADC a leer (ADC7 y ADC6)
 
 	// Configuración inicial del LCD
-	Lcd_Clear_4();  // Limpiar el LCD
+	Lcd_Clear_8();  // Limpiar el LCD
 	_delay_ms(100);  // Esperar para asegurar que el LCD esté listo
-	Lcd_Set_Cursor_4(1, 0);
-	Lcd_Write_String_4("S1:  S2:  S3:");
+	Lcd_Set_Cursor_8(1, 0);
+	Lcd_Write_String_8("S1:   S2:   S3:");
 
 	// Mostrar el menú inicial en la consola
 	display_menu();
@@ -63,19 +65,25 @@ int main(void)
 	{
 		// Leer los valores de los ADC
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
+		
+		// Convertir los valores ADC a voltaje
+		voltage1 = (int)(((adc_results[0] * 5.0) / 1023)*100);
+		voltage2 = (int)(((adc_results[1] * 5.0) / 1023)*100);
 
 		// Mostrar los valores en el LCD
-		Lcd_Set_Cursor_4(2, 0);
-		snprintf(buffer, sizeof(buffer), "%4u", adc_results[1]);
-		Lcd_Write_String_4(buffer);
+		Lcd_Set_Cursor_8(2, 0);
+		//snprintf(buffer, sizeof(buffer), "%1.2fV", voltage1);
+		snprintf(buffer, 16, "%d.%02dV", voltage1 / 100, voltage1 % 100);
+		Lcd_Write_String_8(buffer);
 
-		Lcd_Set_Cursor_4(2, 6);
-		snprintf(buffer, sizeof(buffer), "%4u", adc_results[0]);
-		Lcd_Write_String_4(buffer);
+		Lcd_Set_Cursor_8(2, 6);
+		//snprintf(buffer, sizeof(buffer), "%1.2fV", voltage2);
+		snprintf(buffer, 16, "%d.%02dV", voltage2 / 100, voltage2 % 100);
+		Lcd_Write_String_8(buffer);
 
-		Lcd_Set_Cursor_4(2, 10);
+		Lcd_Set_Cursor_8(2, 11);
 		snprintf(buffer, sizeof(buffer), "%4d", counter);
-		Lcd_Write_String_4(buffer);
+		Lcd_Write_String_8(buffer);
 
 		// Leer y procesar los comandos de la UART
 		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
