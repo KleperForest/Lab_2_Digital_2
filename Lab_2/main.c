@@ -25,9 +25,17 @@
 ////////////////////////////////////////////////////
 // Variables.
 ////////////////////////////////////////////////////
-char buffer[16];  // Buffer para las cadenas de caracteres a mostrar en el LCD
+char buffer[64];  // Buffer para las cadenas de caracteres a mostrar en el LCD y UART
 uint16_t adc_results[2];  // Array para almacenar los resultados del ADC
 int counter = 0;  // Contador inicial
+
+int voltage1, voltage2; //Mapeo de ADC
+
+////////////////////////////////////////////////////
+// Prototipos de funciones
+////////////////////////////////////////////////////
+void display_menu(void);
+void process_command(char command);
 
 ////////////////////////////////////////////////////
 // Programa Principal
@@ -37,8 +45,8 @@ int main(void)
 {
 	// Configuración de puertos y periféricos
 	DDRD = 0xFF;  // Configura todos los pines del puerto D como salidas
-	DDRB = 0xFF;  // Configura los primeros dos pines del puerto B como salidas
-	Lcd_InitLCD8bits();  // Inicializa el LCD en modo de 8 bits
+	DDRB = 0x0F;  // Configura los primeros dos pines del puerto B como salidas
+	Lcd_InitLCD8bits();  // Inicializa el LCD en modo de 4 bits
 	ADC_Init();  // Inicializa el ADC
 	UART_Init(BAUD);  // Inicializa la UART
 
@@ -48,40 +56,78 @@ int main(void)
 	Lcd_Clear_8();  // Limpiar el LCD
 	_delay_ms(100);  // Esperar para asegurar que el LCD esté listo
 	Lcd_Set_Cursor_8(1, 0);
-	Lcd_Write_String_8("S1:    S2:    S3:");
+	Lcd_Write_String_8("S1:   S2:   S3:");
+
+	// Mostrar el menú inicial en la consola
+	display_menu();
 
 	while (1)
 	{
 		// Leer los valores de los ADC
 		ADC_Read_Multiple(adc_channels, adc_results, 2);
+		
+		// Convertir los valores ADC a voltaje
+		voltage1 = (int)(((adc_results[0] * 5.0) / 1023)*100);
+		voltage2 = (int)(((adc_results[1] * 5.0) / 1023)*100);
 
 		// Mostrar los valores en el LCD
 		Lcd_Set_Cursor_8(2, 0);
-		snprintf(buffer, sizeof(buffer), "%4u", adc_results[1]);
+		snprintf(buffer, 16, "%d.%02dV", voltage1 / 100, voltage1 % 100);
 		Lcd_Write_String_8(buffer);
 
-		Lcd_Set_Cursor_8(2, 8);
-		snprintf(buffer, sizeof(buffer), "%4u", adc_results[0]);
+		Lcd_Set_Cursor_8(2, 6);
+		snprintf(buffer, 16, "%d.%02dV", voltage2 / 100, voltage2 % 100);
 		Lcd_Write_String_8(buffer);
 
-		Lcd_Set_Cursor_8(2, 12);
+		Lcd_Set_Cursor_8(2, 11);
 		snprintf(buffer, sizeof(buffer), "%4d", counter);
 		Lcd_Write_String_8(buffer);
 
-		// Enviar los valores de los ADC y el contador a través de UART
-		snprintf(buffer, sizeof(buffer), "ADC6:%u,ADC7:%u,Count:%d\r\n", adc_results[1], adc_results[0], counter);
-		UART_TransmitString(buffer);
-
 		// Leer y procesar los comandos de la UART
 		if (UCSR0A & (1 << RXC0)) {  // Verificar si hay datos disponibles en el buffer de recepción
-			unsigned char received_char = UART_Receive();
-			if (received_char == '+') {
-				counter++;  // Incrementar el contador
-				} else if (received_char == '-') {
-				counter--;  // Decrementar el contador
-			}
+			char received_char = UART_Receive();
+			process_command(received_char);
 		}
 
 		_delay_ms(500);  // Espera medio segundo antes de la siguiente actualización
 	}
+}
+
+////////////////////////////////////////////////////
+// Funciones auxiliares
+////////////////////////////////////////////////////
+
+void display_menu(void) {
+	UART_TransmitString("\r\n***** Menu *****\r\n");
+	UART_TransmitString("1. Mostrar valores de ADC\r\n");
+	UART_TransmitString("2. Incrementar contador (+)\r\n");
+	UART_TransmitString("3. Decrementar contador (-)\r\n");
+	UART_TransmitString("4. Mostrar valor del contador\r\n");
+	UART_TransmitString("*****************\r\n");
+	UART_TransmitString("Seleccione una opción: ");
+}
+
+void process_command(char command) {
+	switch (command) {
+		case '1':
+		snprintf(buffer, sizeof(buffer), "Valores ADC - ADC6: %u, ADC7: %u\r\n", adc_results[1], adc_results[0]);
+		UART_TransmitString(buffer);
+		break;
+		case '+':
+		counter++;
+		UART_TransmitString("Contador incrementado.\r\n");
+		break;
+		case '-':
+		counter--;
+		UART_TransmitString("Contador decrementado.\r\n");
+		break;
+		case '4':
+		snprintf(buffer, sizeof(buffer), "Valor del contador: %d\r\n", counter);
+		UART_TransmitString(buffer);
+		break;
+		default:
+		UART_TransmitString("Opción inválida. Por favor, seleccione una opción válida.\r\n");
+		break;
+	}
+	display_menu();
 }
