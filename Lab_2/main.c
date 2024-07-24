@@ -37,7 +37,7 @@ int main(void)
 {
 	// Configuración de puertos y periféricos
 	DDRD = 0xFF;  // Configura todos los pines del puerto D como salidas
-	DDRB = 0x03;  // Configura los primeros dos pines del puerto B como salidas
+	DDRB = 0xFF;  // Configura los primeros dos pines del puerto B como salidas
 	Lcd_InitLCD8bits();  // Inicializa el LCD en modo de 8 bits
 	ADC_Init();  // Inicializa el ADC
 	UART_Init(BAUD);  // Inicializa la UART
